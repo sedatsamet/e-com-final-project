@@ -1,0 +1,23 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: api-gateway
+#  cloud:
+#    gateway:
+#      routes[0]:
+#        id: user-service
+#        uri: lb://user-service
+#        predicates[0]: Path=/user/**
+
+
+eureka:
+  client:
+    instance-info-replication-interval-seconds: 5
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://localhost:8999/eureka/
+
+jwt:
+  secret: AycXfKGyE81HwQ559R3EWFiW0icOEwViLrFZMYtOvA2NJE5nzPUPGX8m0dyrBuGyEw/phxRE6G5qcjz3yTdX2zdH/cesTeyAjYzqWE1Zzp54Bk1l+UzdbWV+gvoSkkFDKlMgBnYkdAtvqus3p11NajM8vshd7X+3BV4EHJ15/3c=
