@@ -1,9 +1,11 @@
 package org.sedatsamet.productservice.service;
 
 import org.sedatsamet.productservice.dto.request.CreateProductRequest;
+import org.sedatsamet.productservice.dto.request.UpdateProductRequest;
 import org.sedatsamet.productservice.entity.Product;
 import org.sedatsamet.productservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,6 +21,23 @@ public class ProductService {
         Optional<Product> product = productRepository.findById(productId);
         return product.orElse(null);
     }
+
+    public ResponseEntity<Product> updateProduct(UpdateProductRequest createProductRequest) throws IOException {
+        Optional<Product> product = productRepository.findById(createProductRequest.getProductId());
+        if(product.isPresent()){
+            Product updatedProduct = product.get();
+            updatedProduct.setName(createProductRequest.getName());
+            updatedProduct.setDescription(createProductRequest.getDescription());
+            updatedProduct.setQuantity(createProductRequest.getQuantity());
+            updatedProduct.setPrice(createProductRequest.getPrice());
+            if(createProductRequest.getImage() != null) {
+                updatedProduct.setProductImage(createProductRequest.getImage().getBytes());
+            }
+            return ResponseEntity.ok(productRepository.save(updatedProduct));
+        }
+        return ResponseEntity.status(401).build();
+    }
+
 
     public Product createProduct(CreateProductRequest createProductRequest) throws IOException {
         Product product = new Product();

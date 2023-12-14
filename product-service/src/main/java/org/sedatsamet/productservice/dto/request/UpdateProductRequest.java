@@ -4,9 +4,12 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-@Builder
+import java.util.UUID;
+
 @Data
-public class CreateProductRequest {
+@Builder
+public class UpdateProductRequest {
+    private UUID productId;
     private String name;
     private String description;
     private Integer quantity;
