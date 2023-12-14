@@ -12,4 +12,5 @@ public class CreateProductRequest {
     private String description;
     private Integer quantity;
     private MultipartFile image;
+    private Double price;
 }
