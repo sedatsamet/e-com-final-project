@@ -25,6 +25,7 @@ public class ProductService {
         product.setName(createProductRequest.getName());
         product.setDescription(createProductRequest.getDescription());
         product.setQuantity(createProductRequest.getQuantity());
+        product.setPrice(createProductRequest.getPrice());
         if(createProductRequest.getImage() != null) {
             product.setProductImage(createProductRequest.getImage().getBytes());
         }
