@@ -4,12 +4,12 @@ server:
 spring:
   application:
     name: api-gateway
-#  cloud:
-#    gateway:
-#      routes[0]:
-#        id: user-service
-#        uri: lb://user-service
-#        predicates[0]: Path=/user/**
+  cloud:
+    gateway:
+      routes[0]:
+        id: user-service
+        uri: lb://user-service
+        predicates[0]: Path=/user/**
 
 
 eureka:
