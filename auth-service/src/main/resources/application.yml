@@ -1,0 +1,32 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/e-commerce-userDb
+    username: root
+    password: Sedat1998
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8999/eureka/
+    enabled: true
+
+#created with terminal -> openssl rand -base64 128
+jwt:
+  secret: AycXfKGyE81HwQ559R3EWFiW0icOEwViLrFZMYtOvA2NJE5nzPUPGX8m0dyrBuGyEw/phxRE6G5qcjz3yTdX2zdH/cesTeyAjYzqWE1Zzp54Bk1l+UzdbWV+gvoSkkFDKlMgBnYkdAtvqus3p11NajM8vshd7X+3BV4EHJ15/3c=
+
+
+
