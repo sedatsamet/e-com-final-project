@@ -10,6 +10,10 @@ spring:
         id: user-service
         uri: lb://user-service
         predicates[0]: Path=/user/**
+      routes[1]:
+        id: product-service
+        uri: lb://product-service
+        predicates[0]: Path=/product/**
 
 
 eureka:
