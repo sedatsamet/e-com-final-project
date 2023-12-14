@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/product")
@@ -15,6 +16,16 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @GetMapping("/get/{productId}")
+    public ResponseEntity<Product> getProduct(@PathVariable UUID productId) {
+        Product product = productService.getProduct(productId);
+        if(product == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(product);
+    }
+
 
     @PostMapping("/create")
     public ResponseEntity<Product> createProduct(@ModelAttribute CreateProductRequest createProductRequest) {
