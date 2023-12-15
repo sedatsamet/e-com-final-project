@@ -14,6 +14,10 @@ spring:
         id: product-service
         uri: lb://product-service
         predicates[0]: Path=/product/**
+      routes[2]:
+        id: auth-service
+        uri: lb://auth-service
+        predicates[0]: Path=/auth/**
 
 
 eureka:

@@ -6,7 +6,7 @@ spring:
     name: auth-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/e-commerce-userDb
+    url: jdbc:mysql://localhost:3306/e_commerce_userDb
     username: root
     password: Sedat1998
   jpa:
