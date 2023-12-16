@@ -31,7 +31,8 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<String> validateToken(@RequestParam String token) {
-        return ResponseEntity.ok(authService.validateToken(token));
+    public ResponseEntity<?> validateToken(@RequestParam String token) {
+        String response = authService.validateToken(token);
+        return response == "Token is valid" ? ResponseEntity.ok(response) : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 }
