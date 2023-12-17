@@ -32,8 +32,6 @@ public class JwtService {
             return false;
         }
     }
-
-
     public String generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userName);

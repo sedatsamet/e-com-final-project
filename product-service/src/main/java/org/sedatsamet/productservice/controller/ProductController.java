@@ -18,9 +18,10 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/get/{productId}")
-    public ResponseEntity<Product> getProduct(@PathVariable UUID productId) {
-        Product product = productService.getProduct(productId);
+    @GetMapping("/getProductById")
+    public ResponseEntity<Product> getProduct(@RequestParam String productId, @RequestHeader("loggedInUser") String username) {
+        System.out.println("Logged in user details : " + username);
+        Product product = productService.getProduct(UUID.fromString(productId));
         if(product == null) {
             return ResponseEntity.notFound().build();
         }
@@ -44,6 +45,5 @@ public class ProductController {
         } catch (IOException e) {
             return ResponseEntity.notFound().build();
         }
-
     }
 }

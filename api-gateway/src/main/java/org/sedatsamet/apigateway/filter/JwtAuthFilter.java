@@ -1,11 +1,12 @@
 package org.sedatsamet.apigateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
+import org.sedatsamet.apigateway.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 @Slf4j
@@ -13,8 +14,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     @Autowired
     private RouteValidator routeValidator;
     @Autowired
-    private WebClient.Builder webClientBuilder;
-    private final String authValidateUrl = "http://auth-service/auth/validate?token=";
+    private JwtUtil jwtUtil;
 
     public JwtAuthFilter() {
         super(Config.class);
@@ -22,6 +22,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     @Override
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
+            ServerHttpRequest request = null;
             if(routeValidator.isSecured.test(exchange.getRequest())) {
                 // header contains header or not
                 if(!exchange.getRequest().getHeaders().containsKey("Authorization")) {
@@ -32,18 +33,16 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                     authHeader = authHeader.substring(7);
                 }
                 try {
-                    String response = webClientBuilder.build()
-                            .get()
-                            .uri(authValidateUrl + authHeader).retrieve().bodyToMono(String.class).block();
-                    if(!response.equals("Token is valid")) {
-                        throw new RuntimeException("Invalid access");
-                    }
-                    //jwtUtil.validateToken(authHeader);
+                    jwtUtil.validateToken(authHeader);
+                    request = exchange.getRequest()
+                            .mutate()
+                            .header("loggedInUser", jwtUtil.extractUserNameFromToken(authHeader))
+                            .build();
                 }catch (Exception e) {
                     throw new RuntimeException("Authorization token is not valid");
                 }
             }
-            return chain.filter(exchange);
+            return chain.filter(exchange.mutate().request(request).build());
         });
     }
     public static class Config{}
