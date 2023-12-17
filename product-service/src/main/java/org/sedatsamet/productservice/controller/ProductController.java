@@ -57,4 +57,9 @@ public class ProductController {
                 .contentType(MediaType.valueOf("image/png"))
                 .body(ImageUtils.decompressImage(imageData));
     }
+
+    @DeleteMapping("/deleteProduct")
+    public ResponseEntity<?> deleteProduct(@RequestParam String productId) {
+        return ResponseEntity.ok(productService.deleteProduct(UUID.fromString(productId)));
+    }
 }

@@ -51,4 +51,13 @@ public class ProductService {
         }
         return productRepository.save(product);
     }
+
+    public String deleteProduct(UUID uuid) {
+        Product product = getProduct(uuid);
+        if(product == null) {
+            return "Product not found";
+        }
+        productRepository.delete(product);
+        return "Product deleted successfully";
+    }
 }
