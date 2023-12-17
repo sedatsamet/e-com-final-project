@@ -2,6 +2,7 @@ package org.sedatsamet.userservice.service;
 
 
 import org.sedatsamet.userservice.dto.request.UserCreateRequest;
+import org.sedatsamet.userservice.dto.request.UserUpdateRequest;
 import org.sedatsamet.userservice.entity.User;
 import org.sedatsamet.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,10 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
     public User createUser(UserCreateRequest request) {
         User newUser = User.builder()
@@ -38,6 +43,20 @@ public class UserService {
         userRepository.save(newUser);
 
         return newUser;
+    }
+
+    public User updateUser(UserUpdateRequest request) {
+        User user = userRepository.findById(request.getUserId()).orElse(null);
+        if(user != null) {
+            user.setName(request.getName());
+            user.setSurName(request.getSurName());
+            user.setTelephone(request.getTelephone());
+            user.setUsername(request.getUsername());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setAuthorities(request.getAuthorities());
+            userRepository.save(user);
+        }
+        return user;
     }
 
 }

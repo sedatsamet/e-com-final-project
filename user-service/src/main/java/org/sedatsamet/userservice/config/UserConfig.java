@@ -31,7 +31,7 @@ public class UserConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request
-                                .requestMatchers("/user/register").permitAll()
+                                .requestMatchers("/user/**").permitAll()
                                 .anyRequest().authenticated())
                 .build();
     }
