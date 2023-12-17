@@ -4,7 +4,10 @@ import org.sedatsamet.productservice.dto.request.CreateProductRequest;
 import org.sedatsamet.productservice.dto.request.UpdateProductRequest;
 import org.sedatsamet.productservice.entity.Product;
 import org.sedatsamet.productservice.service.ProductService;
+import org.sedatsamet.productservice.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,5 +48,13 @@ public class ProductController {
         } catch (IOException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/productImage/{productId}")
+    public ResponseEntity<?> downloadImage(@PathVariable String productId) {
+        byte[] imageData = productService.getProduct(UUID.fromString(productId)).getProductImage();
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(ImageUtils.decompressImage(imageData));
     }
 }

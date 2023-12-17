@@ -4,6 +4,7 @@ import org.sedatsamet.productservice.dto.request.CreateProductRequest;
 import org.sedatsamet.productservice.dto.request.UpdateProductRequest;
 import org.sedatsamet.productservice.entity.Product;
 import org.sedatsamet.productservice.repository.ProductRepository;
+import org.sedatsamet.productservice.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class ProductService {
             updatedProduct.setQuantity(createProductRequest.getQuantity());
             updatedProduct.setPrice(createProductRequest.getPrice());
             if(createProductRequest.getImage() != null) {
-                updatedProduct.setProductImage(createProductRequest.getImage().getBytes());
+                updatedProduct.setProductImage(ImageUtils.compressImage(createProductRequest.getImage().getBytes()));
             }
             return ResponseEntity.ok(productRepository.save(updatedProduct));
         }
@@ -46,7 +47,7 @@ public class ProductService {
         product.setQuantity(createProductRequest.getQuantity());
         product.setPrice(createProductRequest.getPrice());
         if(createProductRequest.getImage() != null) {
-            product.setProductImage(createProductRequest.getImage().getBytes());
+            product.setProductImage(ImageUtils.compressImage(createProductRequest.getImage().getBytes()));
         }
         return productRepository.save(product);
     }
