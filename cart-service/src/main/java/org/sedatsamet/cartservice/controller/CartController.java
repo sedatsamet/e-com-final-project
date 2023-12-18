@@ -40,4 +40,13 @@ public class CartController {
         }
     }
 
+    @DeleteMapping("/clearCart")
+    public ResponseEntity<CartResponseDto> clearCart(@RequestParam String userId) {
+        try {
+            return ResponseEntity.ok(cartService.clearCart(UUID.fromString(userId)));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }
