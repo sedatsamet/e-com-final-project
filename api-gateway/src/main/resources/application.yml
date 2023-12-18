@@ -26,6 +26,12 @@ spring:
         id: auth-service
         uri: lb://auth-service
         predicates[0]: Path=/auth/**
+      routes[3]:
+        id: cart-service
+        uri: lb://cart-service
+        predicates[0]: Path=/cart/**
+        filters:
+          - JwtAuthFilter
 
 eureka:
   client:

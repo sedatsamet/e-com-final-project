@@ -59,4 +59,7 @@ public class UserService {
         return user;
     }
 
+    public User getUser(UUID userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
 }

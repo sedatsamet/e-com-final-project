@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -31,6 +32,11 @@ public class UserController {
     public ResponseEntity<User> updateUser(@RequestBody UserUpdateRequest request) {
         User updatedUser = userService.updateUser(request);
         return updatedUser != null ? ResponseEntity.ok().body(updatedUser) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/getUser")
+    public ResponseEntity<User> getUser(@RequestParam String userId) {
+        return ResponseEntity.ok().body(userService.getUser(UUID.fromString(userId)));
     }
 
 }
