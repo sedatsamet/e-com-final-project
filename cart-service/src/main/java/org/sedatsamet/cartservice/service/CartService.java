@@ -33,6 +33,15 @@ public class CartService {
 
     @Autowired
     private CartRepository cartRepository;
+    public ResponseEntity<CartResponseDto> addProduct(CartItemRequest request) {
+        setHeader(headers, "sedatsamet");
+        return checkAmountOfProduct(request) ? ResponseEntity.ok(addProductToCart(request)) : ResponseEntity.badRequest().build();
+    }
+
+    public ResponseEntity<CartResponseDto> updateAmountOfCartItem(CartItemRequest request) {
+        setHeader(headers, "sedatsamet");
+        return checkAmountOfProduct(request) ? ResponseEntity.ok(updateCartItem(request)) : ResponseEntity.badRequest().build();
+    }
 
     public CartResponseDto getCart(UUID userId) {
         Optional<Cart> cart = null;
@@ -60,9 +69,40 @@ public class CartService {
         }
     }
 
-    public ResponseEntity<CartResponseDto> addProduct(CartItemRequest request) {
-        setHeader(headers, "sedatsamet");
-        return checkAmountOfProduct(request) ? ResponseEntity.ok(addProductToCart(request)) : ResponseEntity.badRequest().build();
+    private CartResponseDto updateCartItem(CartItemRequest request) {
+        User user = restTemplate.getForEntity(userServiceUrl + request.getUserId(), User.class).getBody();
+        Cart cart = cartRepository.findById(user.getCartId()).orElse(null);
+        CartItem cartItemWillUpdate;
+        List<CartItem> cartItems = new ArrayList<>();
+        if(cart == null) {
+            throw new RuntimeException("Cart not found");
+        }else{
+            cartItems = cart.getProducts();
+            CartItem existingProduct = null;
+            try{
+                for(CartItem cartItem : cartItems){
+                    if(cartItem.getProductId().equals(request.getProductId())){
+                        existingProduct = cartItem;
+                        break;
+                    }
+                }
+            }catch (Exception e){
+                throw new RuntimeException("Product not found");
+            }
+            if (existingProduct != null) {
+                cartItemWillUpdate = existingProduct;
+                cartItemWillUpdate.setQuantity(request.getAmount());
+            }else{
+                throw new RuntimeException("Product not found");
+            }
+        }
+        cartRepository.save(cart);
+        return CartResponseDto.builder()
+                .cartId(cart.getCartId())
+                .userId(cart.getUserId())
+                .userName(user.getName())
+                .cartItems(cart.getProducts())
+                .build();
     }
 
     private Boolean checkAmountOfProduct(CartItemRequest request) {

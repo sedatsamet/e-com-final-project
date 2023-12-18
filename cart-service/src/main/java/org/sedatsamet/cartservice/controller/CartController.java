@@ -29,7 +29,15 @@ public class CartController {
     @PostMapping("/add")
     public ResponseEntity<CartResponseDto> addProduct(@RequestBody CartItemRequest request) {
         return cartService.addProduct(request);
+    }
 
+    @PutMapping("/updateCartItem")
+    public ResponseEntity<CartResponseDto> updateCartItem(@RequestBody CartItemRequest request) {
+        try {
+            return cartService.updateAmountOfCartItem(request);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 }
