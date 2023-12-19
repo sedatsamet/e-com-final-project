@@ -22,8 +22,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/getProductById")
-    public ResponseEntity<Product> getProduct(@RequestParam String productId, @RequestHeader("loggedInUser") String username) {
-        System.out.println("Logged in user details : " + username);
+    public ResponseEntity<Product> getProduct(@RequestParam String productId) {
         Product product = productService.getProduct(UUID.fromString(productId));
         if(product == null) {
             return ResponseEntity.notFound().build();

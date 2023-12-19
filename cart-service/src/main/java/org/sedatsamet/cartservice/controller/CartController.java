@@ -16,12 +16,11 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-
     @GetMapping("/getCartByUserId")
     public ResponseEntity<CartResponseDto> getCart(@RequestParam String userId) {
-        try{
+        try {
             return ResponseEntity.ok(cartService.getCart(UUID.fromString(userId)));
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
@@ -35,7 +34,7 @@ public class CartController {
     public ResponseEntity<CartResponseDto> updateCartItem(@RequestBody CartItemRequest request) {
         try {
             return cartService.updateAmountOfCartItem(request);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
@@ -44,9 +43,8 @@ public class CartController {
     public ResponseEntity<CartResponseDto> clearCart(@RequestParam String userId) {
         try {
             return ResponseEntity.ok(cartService.clearCart(UUID.fromString(userId)));
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
 }

@@ -14,13 +14,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "cart_items")
 public class CartItem {
-
     @Id
     private UUID productId;
     private String name;
     private String description;
     private Integer quantity;
     private Double price;
+
     @Lob
     @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] productImage;

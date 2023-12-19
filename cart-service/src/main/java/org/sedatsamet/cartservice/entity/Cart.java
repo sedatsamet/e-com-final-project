@@ -16,7 +16,6 @@ import java.util.UUID;
 @Table(name = "carts")
 @Builder
 public class Cart {
-
     @Id
     private UUID cartId;
     private UUID userId;
