@@ -48,7 +48,7 @@ public class CartService {
     }
 
     public CartResponseDto clearCart(UUID userId) {
-        User user = restTemplate.getForEntity(userServiceUrl + userId, User.class).getBody();
+        User user = getUserFromUserService(userId);
         Cart cart = cartRepository.findById(user.getCartId()).orElse(null);
         List<CartItem> emptyList = new ArrayList<>();
         if(cart == null) {
@@ -67,7 +67,7 @@ public class CartService {
     public CartResponseDto getCart(UUID userId) {
         Optional<Cart> cart = null;
         List<CartItem> productListOfUser = null;
-        User user = restTemplate.getForEntity(userServiceUrl + userId, User.class).getBody();
+        User user = getUserFromUserService(userId);
         if (user != null) {
             cart = cartRepository.findById(user.getCartId());
             if(cart.isEmpty()) {
@@ -89,7 +89,7 @@ public class CartService {
     }
 
     private CartResponseDto updateCartItem(CartItemRequest request) {
-        User user = restTemplate.getForEntity(userServiceUrl + request.getUserId(), User.class).getBody();
+        User user = getUserFromUserService(request.getUserId());
         Cart cart = cartRepository.findById(user.getCartId()).orElse(null);
         CartItem cartItemWillUpdate;
         List<CartItem> cartItems = new ArrayList<>();
@@ -133,7 +133,7 @@ public class CartService {
     }
 
     private CartResponseDto addProductToCart(CartItemRequest request) {
-        User user = restTemplate.getForEntity(userServiceUrl + request.getUserId(), User.class).getBody();
+        User user = getUserFromUserService(request.getUserId());
         Cart cart = cartRepository.findById(user.getCartId()).orElse(null);
         CartItem cartItemWillAdd;
         List<CartItem> cartItems = new ArrayList<>();
@@ -183,6 +183,9 @@ public class CartService {
         CartItem cartItem = restTemplate.exchange(productServiceUrl + request.getProductId(), HttpMethod.GET, httpEntity, CartItem.class).getBody();
         //CartItem cartItem = restTemplate.getForEntity(productServiceUrl + request.getProductId(), CartItem.class).getBody();
         return cartItem != null ? cartItem : null;
+    }
+    private User getUserFromUserService(UUID userId) {
+        return restTemplate.getForEntity(userServiceUrl + userId, User.class).getBody();
     }
 
     private void setHeader(HttpHeaders headers, String username) {

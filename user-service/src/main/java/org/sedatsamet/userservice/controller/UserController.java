@@ -39,4 +39,9 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUser(UUID.fromString(userId)));
     }
 
+    @GetMapping("/getUserByUsername")
+    public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
+        return ResponseEntity.ok().body(userService.getUserByUserName(username));
+    }
+
 }

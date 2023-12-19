@@ -62,4 +62,8 @@ public class UserService {
     public User getUser(UUID userId) {
         return userRepository.findById(userId).orElse(null);
     }
+
+    public User getUserByUserName(String username) {
+        return userRepository.findByUsername(username).orElse(null);
+    }
 }
