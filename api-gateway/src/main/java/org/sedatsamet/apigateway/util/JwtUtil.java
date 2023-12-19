@@ -12,7 +12,7 @@ import java.security.Key;
 @Component
 public class JwtUtil {
     @Value("${jwt.secret}")
-    private  String SECRET_KEY;
+    private String SECRET_KEY;
 
     public void validateToken(String token) {
         Jwts.parserBuilder()
@@ -20,6 +20,7 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token);
     }
+
     public String extractUserNameFromToken(String token) {
         Claims claims = parseTokenClaims(token);
         return claims.getSubject();
@@ -33,10 +34,8 @@ public class JwtUtil {
                 .getBody();
     }
 
-
-    private Key getSignKey(){
+    private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
 }

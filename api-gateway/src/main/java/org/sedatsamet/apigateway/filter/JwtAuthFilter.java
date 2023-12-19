@@ -19,17 +19,18 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     public JwtAuthFilter() {
         super(Config.class);
     }
+
     @Override
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
             ServerHttpRequest request = null;
-            if(routeValidator.isSecured.test(exchange.getRequest())) {
+            if (routeValidator.isSecured.test(exchange.getRequest())) {
                 // header contains header or not
-                if(!exchange.getRequest().getHeaders().containsKey("Authorization")) {
+                if (!exchange.getRequest().getHeaders().containsKey("Authorization")) {
                     throw new RuntimeException("Authorization header is missing");
                 }
                 String authHeader = exchange.getRequest().getHeaders().get("Authorization").get(0);
-                if(authHeader != null && authHeader.startsWith("Bearer ")) {
+                if (authHeader != null && authHeader.startsWith("Bearer ")) {
                     authHeader = authHeader.substring(7);
                 }
                 try {
@@ -38,12 +39,14 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                             .mutate()
                             .header("loggedInUser", jwtUtil.extractUserNameFromToken(authHeader))
                             .build();
-                }catch (Exception e) {
+                } catch (Exception e) {
                     throw new RuntimeException("Authorization token is not valid");
                 }
             }
             return chain.filter(exchange.mutate().request(request).build());
         });
     }
-    public static class Config{}
+
+    public static class Config {
+    }
 }

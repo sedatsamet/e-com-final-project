@@ -1,4 +1,4 @@
- package org.sedatsamet.apigateway.filter;
+package org.sedatsamet.apigateway.filter;
 
 
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -13,8 +13,7 @@ public class RouteValidator {
     public static final List<String> openApiEndpoints = List.of(
             "/user/register",
             "/auth/login",
-            "/eureka"
-    );
+            "/eureka");
 
     public Predicate<ServerHttpRequest> isSecured = request -> openApiEndpoints
             .stream()
