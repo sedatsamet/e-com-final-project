@@ -8,7 +8,9 @@ import org.sedatsamet.cartservice.entity.User;
 import org.sedatsamet.cartservice.repository.CartRepository;
 import org.sedatsamet.cartservice.util.CartUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,38 +25,94 @@ public class CartService {
     @Autowired
     private CartUtil cartUtil;
 
-    public ResponseEntity<CartResponseDto> addProduct(CartItemRequest request) {
-        return checkAmountOfProduct(request) ? ResponseEntity.ok(addProductToCart(request)) : ResponseEntity.badRequest().build();
-    }
-
-    public ResponseEntity<CartResponseDto> updateAmountOfCartItem(CartItemRequest request) {
-        return checkAmountOfProduct(request) ? ResponseEntity.ok(updateCartItem(request)) : ResponseEntity.badRequest().build();
-    }
-
-    public CartResponseDto clearCart(UUID userId) {
-        User user = getUserFromUserService(userId);
-        Cart cart = cartRepository.findById(user.getCartId()).orElse(null);
-        List<CartItem> emptyList = new ArrayList<>();
-        if (cart == null) {
-            throw new RuntimeException("Cart not found");
-        } else {
-            cartRepository.delete(cart);
+    public ResponseEntity<?> addProduct(CartItemRequest request) {
+        if(cartUtil.isUserAdmin()){
+            return checkAmountOfProduct(request) ? ResponseEntity.ok(addProductToCart(request)) :
+                    ResponseEntity.status(HttpStatus.CONFLICT).body("Product out of stock");
+        }else {
+            if(cartUtil.getAuthenticatedUser().getUserId().equals(request.getUserId())){
+                return checkAmountOfProduct(request) ? ResponseEntity.ok(addProductToCart(request)) :
+                        ResponseEntity.status(HttpStatus.CONFLICT).body("Product out of stock");
+            }else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You don't have an acess");
+            }
         }
-        return CartResponseDto.builder().cartId(user.getCartId()).userId(user.getUserId()).userName(user.getName()).cartItems(emptyList).build();
     }
 
-    public CartResponseDto getCart(UUID userId) {
+    public ResponseEntity<?> updateAmountOfCartItem(CartItemRequest request) {
+        if(cartUtil.isUserAdmin()){
+            return checkAmountOfProduct(request) ? ResponseEntity.ok(updateCartItem(request)) :
+                    ResponseEntity.status(HttpStatus.CONFLICT).body("Product out of stock");
+        }else {
+            if(cartUtil.getAuthenticatedUser().getUserId().equals(request.getUserId())){
+                return checkAmountOfProduct(request) ? ResponseEntity.ok(updateCartItem(request)) :
+                        ResponseEntity.status(HttpStatus.CONFLICT).body("Product out of stock");
+            }else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You don't have an acess");
+            }
+        }
+    }
+
+    public ResponseEntity<?> clearCart(UUID userId) {
+        if(cartUtil.isUserAdmin()){
+            return ResponseEntity.ok(deleteAllCartItems(userId));
+        }else {
+            if(cartUtil.getAuthenticatedUser().getUserId().equals(userId)){
+                return ResponseEntity.ok(deleteAllCartItems(userId));
+            }else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You don't have an acess");
+            }
+        }
+    }
+
+    private ResponseEntity<?> deleteAllCartItems(UUID userId) {
+        User user = null;
+        Cart cart = null;
+        List<CartItem> emptyList = new ArrayList<>();
+        try {
+            user = getUserFromUserService(userId);
+            cart = cartRepository.findById(user.getCartId()).orElse(null);
+            if(cart == null) {
+                throw new ClassNotFoundException("Cart not found while deleting all items");
+            }
+            if(user == null) {
+                throw new UsernameNotFoundException("User not found while deleting all items");
+            }
+        }catch (ClassNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found while deleting all items");
+        }catch (UsernameNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found while deleting all items");
+        }
+        cartRepository.delete(cart);
+        return ResponseEntity.ok(CartResponseDto.builder()
+                .cartId(user.getCartId())
+                .userId(user.getUserId())
+                .userName(user.getUsername())
+                .cartItems(emptyList).build());
+    }
+
+    public ResponseEntity<?> getCart(UUID userId) {
         Optional<Cart> cart = null;
         List<CartItem> productListOfUser = null;
         User user = getUserFromUserService(userId);
         if (user != null) {
             cart = cartRepository.findById(user.getCartId());
             if (cart.isEmpty()) {
-                return CartResponseDto.builder().cartId(user.getCartId()).userId(user.getUserId()).userName(user.getName()).cartItems(new ArrayList<>()).build();
+                return ResponseEntity.ok(CartResponseDto.builder()
+                        .cartId(user.getCartId())
+                        .userId(user.getUserId())
+                        .userName(user.getUsername())
+                        .cartItems(new ArrayList<>())
+                        .build());
             }
             productListOfUser = cart.get().getProducts();
         }
-        return CartResponseDto.builder().cartId(user.getCartId()).userId(user.getUserId()).userName(user.getName()).cartItems(productListOfUser).build();
+        return ResponseEntity.ok(CartResponseDto.builder()
+                .cartId(user.getCartId())
+                .userId(user.getUserId())
+                .userName(user.getUsername())
+                .cartItems(productListOfUser)
+                .build());
     }
 
     private CartResponseDto updateCartItem(CartItemRequest request) {
@@ -85,7 +143,12 @@ public class CartService {
             }
         }
         cartRepository.save(cart);
-        return CartResponseDto.builder().cartId(user.getCartId()).userId(user.getUserId()).userName(user.getName()).cartItems(cart.getProducts()).build();
+        return CartResponseDto.builder()
+                .cartId(user.getCartId())
+                .userId(user.getUserId())
+                .userName(user.getUsername())
+                .cartItems(cart.getProducts())
+                .build();
     }
 
     private Boolean checkAmountOfProduct(CartItemRequest request) {
@@ -102,7 +165,11 @@ public class CartService {
         CartItem cartItemWillAdd;
         List<CartItem> cartItems = new ArrayList<>();
         if (cart == null) {
-            cart = Cart.builder().cartId(user.getCartId()).userId(user.getUserId()).products(new ArrayList<>()).build();
+            cart = Cart.builder()
+                    .cartId(user.getCartId())
+                    .userId(user.getUserId())
+                    .products(new ArrayList<>())
+                    .build();
             cartItemWillAdd = getCartItemFromProductService(request);
             cartItemWillAdd.setQuantity(request.getAmount());
             cart.getProducts().add(cartItemWillAdd);
@@ -131,7 +198,12 @@ public class CartService {
             }
         }
         cartRepository.save(cart);
-        return CartResponseDto.builder().cartId(user.getCartId()).userId(user.getUserId()).userName(user.getName()).cartItems(cart.getProducts()).build();
+        return CartResponseDto.builder()
+                .cartId(user.getCartId())
+                .userId(user.getUserId())
+                .userName(user.getUsername())
+                .cartItems(cart.getProducts())
+                .build();
     }
 
     private CartItem getCartItemFromProductService(CartItemRequest request) {

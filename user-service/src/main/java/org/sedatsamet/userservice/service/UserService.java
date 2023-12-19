@@ -6,6 +6,8 @@ import org.sedatsamet.userservice.dto.request.UserUpdateRequest;
 import org.sedatsamet.userservice.entity.User;
 import org.sedatsamet.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +16,8 @@ import java.util.UUID;
 
 @Service
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -46,6 +46,38 @@ public class UserService {
     }
 
     public User updateUser(UserUpdateRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        if(authenticatedUser.getAuthorities().stream().findFirst().get().getAuthority().equals("ROLE_ADMIN")) {
+            return userUpdate(request);
+        }else{
+            if(authenticatedUser.getUserId().equals(request.getUserId())) {
+                return userUpdate(request);
+            }else{
+                throw new RuntimeException("You are not authorized to view this user");
+            }
+        }
+    }
+
+    public User getUser(UUID userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        if(authenticatedUser.getAuthorities().stream().findFirst().get().getAuthority().equals("ROLE_ADMIN")) {
+            return userRepository.findById(userId).orElse(null);
+        }else{
+            if(authenticatedUser.getUserId().equals(userId)) {
+                return userRepository.findById(userId).orElse(null);
+            }else{
+                throw new RuntimeException("You are not authorized to view this user");
+            }
+        }
+    }
+
+    public User getUserByUserName(String username) {
+        return userRepository.findByUsername(username).orElse(null);
+    }
+
+    private User userUpdate(UserUpdateRequest request) {
         User user = userRepository.findById(request.getUserId()).orElse(null);
         if(user != null) {
             user.setName(request.getName());
@@ -57,13 +89,5 @@ public class UserService {
             userRepository.save(user);
         }
         return user;
-    }
-
-    public User getUser(UUID userId) {
-        return userRepository.findById(userId).orElse(null);
-    }
-
-    public User getUserByUserName(String username) {
-        return userRepository.findByUsername(username).orElse(null);
     }
 }

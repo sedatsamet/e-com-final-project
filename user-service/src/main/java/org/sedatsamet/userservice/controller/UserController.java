@@ -5,6 +5,7 @@ import org.sedatsamet.userservice.dto.request.UserUpdateRequest;
 import org.sedatsamet.userservice.entity.User;
 import org.sedatsamet.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     @Autowired
     private UserService userService;
 
@@ -29,19 +29,25 @@ public class UserController {
     }
 
     @PutMapping("/updateUser")
-    public ResponseEntity<User> updateUser(@RequestBody UserUpdateRequest request) {
-        User updatedUser = userService.updateUser(request);
-        return updatedUser != null ? ResponseEntity.ok().body(updatedUser) : ResponseEntity.notFound().build();
+    public ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest request) {
+        try {
+            return ResponseEntity.ok().body(userService.updateUser(request));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to update this user");
+        }
     }
 
     @GetMapping("/getUser")
-    public ResponseEntity<User> getUser(@RequestParam String userId) {
-        return ResponseEntity.ok().body(userService.getUser(UUID.fromString(userId)));
+    public ResponseEntity<?> getUser(@RequestParam String userId) {
+        try {
+            return ResponseEntity.ok().body(userService.getUser(UUID.fromString(userId)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view this user");
+        }
     }
 
     @GetMapping("/getUserByUsername")
     public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
         return ResponseEntity.ok().body(userService.getUserByUserName(username));
     }
-
 }

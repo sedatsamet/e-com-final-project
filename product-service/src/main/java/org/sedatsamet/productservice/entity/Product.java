@@ -15,11 +15,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "products")
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID productId;
-
     private String name;
     private String description;
     private Integer quantity;
@@ -28,5 +26,4 @@ public class Product {
     @Lob
     @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] productImage;
-
 }

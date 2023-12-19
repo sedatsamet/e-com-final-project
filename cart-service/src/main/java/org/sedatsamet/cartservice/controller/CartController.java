@@ -1,11 +1,11 @@
 package org.sedatsamet.cartservice.controller;
 
 import org.sedatsamet.cartservice.dto.CartItemRequest;
-import org.sedatsamet.cartservice.dto.CartResponseDto;
 import org.sedatsamet.cartservice.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -17,21 +17,27 @@ public class CartController {
     private CartService cartService;
 
     @GetMapping("/getCartByUserId")
-    public ResponseEntity<CartResponseDto> getCart(@RequestParam String userId) {
+    public ResponseEntity<?> getCart(@RequestParam String userId) {
         try {
             return ResponseEntity.ok(cartService.getCart(UUID.fromString(userId)));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You don't have an acess");
         }
     }
 
     @PostMapping("/add")
-    public ResponseEntity<CartResponseDto> addProduct(@RequestBody CartItemRequest request) {
-        return cartService.addProduct(request);
+    public ResponseEntity<?> addProduct(@RequestBody CartItemRequest request) {
+        try {
+            return cartService.addProduct(request);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You don't have an acess");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something went wrong");
+        }
     }
 
     @PutMapping("/updateCartItem")
-    public ResponseEntity<CartResponseDto> updateCartItem(@RequestBody CartItemRequest request) {
+    public ResponseEntity<?> updateCartItem(@RequestBody CartItemRequest request) {
         try {
             return cartService.updateAmountOfCartItem(request);
         } catch (Exception e) {
@@ -40,11 +46,11 @@ public class CartController {
     }
 
     @DeleteMapping("/clearCart")
-    public ResponseEntity<CartResponseDto> clearCart(@RequestParam String userId) {
+    public ResponseEntity<?> clearCart(@RequestParam String userId) {
         try {
             return ResponseEntity.ok(cartService.clearCart(UUID.fromString(userId)));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found while deleting all items");
         }
     }
 }

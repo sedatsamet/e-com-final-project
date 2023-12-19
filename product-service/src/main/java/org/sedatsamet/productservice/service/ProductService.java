@@ -39,7 +39,6 @@ public class ProductService {
         return ResponseEntity.status(401).build();
     }
 
-
     public Product createProduct(CreateProductRequest createProductRequest) throws IOException {
         Product product = new Product();
         product.setName(createProductRequest.getName());

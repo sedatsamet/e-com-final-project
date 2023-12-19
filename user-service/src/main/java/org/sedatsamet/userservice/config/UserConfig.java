@@ -27,8 +27,6 @@ public class UserConfig {
                         request
                                 .requestMatchers("/user/register").permitAll()
                                 .requestMatchers("/user/allUsers").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/user/getUserByUsername").authenticated()
-                                .requestMatchers("/user/getUser").authenticated()
                                 .anyRequest().authenticated())
                 .build();
     }

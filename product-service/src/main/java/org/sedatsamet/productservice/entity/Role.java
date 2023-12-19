@@ -1,4 +1,4 @@
-package org.sedatsamet.authservice.entity;
+package org.sedatsamet.productservice.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 

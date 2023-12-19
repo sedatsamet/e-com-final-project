@@ -17,14 +17,13 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
-
     @Autowired
     private ProductService productService;
 
     @GetMapping("/getProductById")
     public ResponseEntity<Product> getProduct(@RequestParam String productId) {
         Product product = productService.getProduct(UUID.fromString(productId));
-        if(product == null) {
+        if (product == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(product);
@@ -39,7 +38,6 @@ public class ProductController {
         }
     }
 
-
     @PostMapping("/create")
     public ResponseEntity<Product> createProduct(@ModelAttribute CreateProductRequest createProductRequest) {
         try {
@@ -52,9 +50,7 @@ public class ProductController {
     @GetMapping("/productImage/{productId}")
     public ResponseEntity<?> downloadImage(@PathVariable String productId) {
         byte[] imageData = productService.getProduct(UUID.fromString(productId)).getProductImage();
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf("image/png"))
-                .body(ImageUtils.decompressImage(imageData));
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(ImageUtils.decompressImage(imageData));
     }
 
     @DeleteMapping("/deleteProduct")

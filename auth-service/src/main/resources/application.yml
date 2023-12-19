@@ -27,6 +27,3 @@ eureka:
 #created with terminal -> openssl rand -base64 128
 jwt:
   secret: AycXfKGyE81HwQ559R3EWFiW0icOEwViLrFZMYtOvA2NJE5nzPUPGX8m0dyrBuGyEw/phxRE6G5qcjz3yTdX2zdH/cesTeyAjYzqWE1Zzp54Bk1l+UzdbWV+gvoSkkFDKlMgBnYkdAtvqus3p11NajM8vshd7X+3BV4EHJ15/3c=
-
-
-

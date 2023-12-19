@@ -21,10 +21,7 @@ public class SecurityConfig {
                 .addFilterBefore(customHeaderAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(x ->
                         x
-                                .requestMatchers("/cart/getCartByUserId").hasAnyAuthority("ROLE_CUSTOMER","ROLE_ADMIN")
-                                .anyRequest().authenticated())
+                                .requestMatchers("/cart/**").authenticated())
                 .build();
     }
-
-
 }
