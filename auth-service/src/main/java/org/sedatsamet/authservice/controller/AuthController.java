@@ -5,9 +5,6 @@ import org.sedatsamet.authservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,19 +12,15 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     @Autowired
     private AuthService authService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
     public ResponseEntity<String> logIn(@RequestBody UserLoginRequest userLoginRequest) {
-        Authentication authenticate = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(
-                        userLoginRequest.getUsername(),
-                        userLoginRequest.getPassword()));
-        if(authenticate.isAuthenticated()){
-            return ResponseEntity.ok(authService.generateToken(userLoginRequest.getUsername()));
+        String token = authService.generateToken(userLoginRequest);
+        if (token != null) {
+            return ResponseEntity.ok(token);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid username or password");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid username or password");
     }
 
     @GetMapping("/validate")

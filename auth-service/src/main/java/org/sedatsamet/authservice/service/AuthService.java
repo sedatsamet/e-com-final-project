@@ -1,30 +1,30 @@
 package org.sedatsamet.authservice.service;
 
-import org.sedatsamet.authservice.entity.User;
-import org.sedatsamet.authservice.repository.AuthRepository;
+import org.sedatsamet.authservice.dto.UserLoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-public class AuthService implements UserDetailsService {
-    @Autowired
-    private AuthRepository authRepository;
+public class AuthService {
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = authRepository.findByUsername(username);
-        return user.orElseThrow(() -> new UsernameNotFoundException("User not found " + username));
-    }
-
-    public String generateToken(String userName) {
-        return jwtService.generateToken(userName);
+    public String generateToken(UserLoginRequest userLoginRequest) {
+        Authentication authenticate = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userLoginRequest.getUsername(),
+                        userLoginRequest.getPassword()));
+        if (authenticate.isAuthenticated()) {
+            String generatedToken = jwtService.generateToken(userLoginRequest.getUsername());
+            return generatedToken;
+        } else {
+            return null;
+        }
     }
 
     public String validateToken(String token) {
