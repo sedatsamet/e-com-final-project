@@ -88,7 +88,9 @@ public class CartService {
                 .cartId(user.getCartId())
                 .userId(user.getUserId())
                 .userName(user.getUsername())
-                .cartItems(emptyList).build());
+                .cartItems(emptyList)
+                .totalPrice(calculateTotalPrice(emptyList))
+                .build());
     }
 
     public ResponseEntity<?> getCart(UUID userId) {
@@ -101,8 +103,10 @@ public class CartService {
                 return ResponseEntity.ok(CartResponseDto.builder()
                         .cartId(user.getCartId())
                         .userId(user.getUserId())
+                        .totalPrice(0.0)
                         .userName(user.getUsername())
                         .cartItems(new ArrayList<>())
+                        .totalPrice(calculateTotalPrice(List.of()))
                         .build());
             }
             productListOfUser = cart.get().getProducts();
@@ -112,6 +116,7 @@ public class CartService {
                 .userId(user.getUserId())
                 .userName(user.getUsername())
                 .cartItems(productListOfUser)
+                .totalPrice(calculateTotalPrice(productListOfUser))
                 .build());
     }
 
@@ -142,6 +147,7 @@ public class CartService {
                 throw new RuntimeException("Product not found");
             }
         }
+        cart.setTotalPrice(calculateTotalPrice(cartItems));
         cartRepository.save(cart);
         return CartResponseDto.builder()
                 .cartId(user.getCartId())
@@ -169,13 +175,16 @@ public class CartService {
                     .cartId(user.getCartId())
                     .userId(user.getUserId())
                     .products(new ArrayList<>())
+                    .totalPrice(0.0) // Eklendi
                     .build();
             cartItemWillAdd = getCartItemFromProductService(request);
             cartItemWillAdd.setQuantity(request.getAmount());
             cart.getProducts().add(cartItemWillAdd);
             cartItemWillAdd.setCart(cart);
+            cart.setTotalPrice(calculateTotalPrice(cart.getProducts()));
         } else {
             cartItems = cart.getProducts();
+            System.out.println(cartItems.size());
             CartItem existingProduct = null;
             try {
                 for (CartItem cartItem : cartItems) {
@@ -188,13 +197,21 @@ public class CartService {
                 cartItemWillAdd = getCartItemFromProductService(request);
                 cartItemWillAdd.setQuantity(request.getAmount());
                 cart.getProducts().add(cartItemWillAdd);
+                cartItemWillAdd.setCart(cart);
+                cart.setTotalPrice(calculateTotalPrice(cart.getProducts()));
             }
-
             if (existingProduct != null) {
                 cartItemWillAdd = existingProduct;
                 cartItemWillAdd.setQuantity(cartItemWillAdd.getQuantity() + request.getAmount());
+                cartItemWillAdd.setCart(cart);
+                cart.setTotalPrice(calculateTotalPrice(cart.getProducts()));
             } else {
                 cartItems.add(getCartItemFromProductService(request));
+                for(CartItem item: cartItems) {
+                    item.setCart(cart);
+                }
+                cart.setProducts(cartItems);
+                cart.setTotalPrice(calculateTotalPrice(cart.getProducts()));
             }
         }
         cartRepository.save(cart);
@@ -203,6 +220,7 @@ public class CartService {
                 .userId(user.getUserId())
                 .userName(user.getUsername())
                 .cartItems(cart.getProducts())
+                .totalPrice(cart.getTotalPrice())
                 .build();
     }
 
@@ -212,5 +230,13 @@ public class CartService {
 
     private User getUserFromUserService(UUID userId) {
         return cartUtil.getUserDetailsByUserId(userId);
+    }
+
+    private Double calculateTotalPrice(List<CartItem> cartItems) {
+        Double totalPrice = 0.0;
+        for (CartItem cartItem : cartItems) {
+            totalPrice += cartItem.getQuantity() * cartItem.getPrice();
+        }
+        return totalPrice;
     }
 }

@@ -22,4 +22,5 @@ public class Cart {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cart")
     private List<CartItem> products;
+    private Double totalPrice;
 }

@@ -15,4 +15,5 @@ public class CartResponseDto {
     private UUID userId;
     private String userName;
     private List<CartItem> cartItems = new ArrayList<>();
+    private Double totalPrice;
 }

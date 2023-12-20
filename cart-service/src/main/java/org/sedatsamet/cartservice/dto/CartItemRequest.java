@@ -8,5 +8,5 @@ import java.util.UUID;
 public class CartItemRequest {
     private UUID productId;
     private UUID userId;
-    private Integer amount;
+    private Double amount;
 }

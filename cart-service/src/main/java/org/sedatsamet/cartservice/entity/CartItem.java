@@ -18,7 +18,7 @@ public class CartItem {
     private UUID productId;
     private String name;
     private String description;
-    private Integer quantity;
+    private Double quantity;
     private Double price;
 
     @Lob
