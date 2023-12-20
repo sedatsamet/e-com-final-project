@@ -206,7 +206,9 @@ public class CartService {
                 cartItemWillAdd.setCart(cart);
                 cart.setTotalPrice(calculateTotalPrice(cart.getProducts()));
             } else {
-                cartItems.add(getCartItemFromProductService(request));
+                cartItemWillAdd = getCartItemFromProductService(request);
+                cartItemWillAdd.setQuantity(request.getAmount());
+                cartItems.add(cartItemWillAdd);
                 for(CartItem item: cartItems) {
                     item.setCart(cart);
                 }
@@ -238,5 +240,29 @@ public class CartService {
             totalPrice += cartItem.getQuantity() * cartItem.getPrice();
         }
         return totalPrice;
+    }
+
+    public Cart getCartByCartIdForOrderService(UUID userId) {
+        Optional<Cart> cart = null;
+        List<CartItem> productListOfUser = null;
+        User user = getUserFromUserService(userId);
+        if (user != null) {
+            cart = cartRepository.findById(user.getCartId());
+            if (cart.isEmpty()) {
+                return Cart.builder()
+                        .cartId(user.getCartId())
+                        .userId(user.getUserId())
+                        .products(new ArrayList<>())
+                        .totalPrice(0.0)
+                        .build();
+            }
+            productListOfUser = cart.get().getProducts();
+        }
+        return Cart.builder()
+                .cartId(user.getCartId())
+                .userId(user.getUserId())
+                .products(productListOfUser)
+                .totalPrice(calculateTotalPrice(productListOfUser))
+                .build();
     }
 }

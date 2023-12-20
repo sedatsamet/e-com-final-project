@@ -1,6 +1,7 @@
 package org.sedatsamet.cartservice.controller;
 
 import org.sedatsamet.cartservice.dto.CartItemRequest;
+import org.sedatsamet.cartservice.entity.Cart;
 import org.sedatsamet.cartservice.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,5 +53,10 @@ public class CartController {
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found while deleting all items");
         }
+    }
+
+    @GetMapping("/getCartByUserIdForOrderService")
+    public ResponseEntity<Cart> getCartByCartId(@RequestParam String userId) {
+        return ResponseEntity.ok(cartService.getCartByCartIdForOrderService(UUID.fromString(userId)));
     }
 }

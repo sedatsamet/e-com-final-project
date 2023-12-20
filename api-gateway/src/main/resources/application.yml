@@ -32,6 +32,12 @@ spring:
         predicates[0]: Path=/cart/**
         filters:
           - JwtAuthFilter
+      routes[4]:
+        id: order-service
+        uri: lb://order-service
+        predicates[0]: Path=/order/**
+        filters:
+          - JwtAuthFilter
 
 eureka:
   client:

@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.sedatsamet</groupId>
-	<artifactId>product-service</artifactId>
+	<artifactId>cartItem-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>product-service</name>
-	<description>product-service</description>
+	<name>cartItem-service</name>
+	<description>cartItem-service</description>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2022.0.4</spring-cloud.version>
