@@ -9,6 +9,7 @@ import org.sedatsamet.orderservice.util.OrderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,19 +39,24 @@ public class OrderService {
     private Order createNewOrder(PlaceOrderRequest request) {
         try {
             Cart cart = getCartByUserId(request);
-            Order order = Order.builder()
-                    .userId(request.getUserId())
-                    .totalPrice(cart.getTotalPrice())
-                    .totalAmountOfProduct(calculateTotalAmountOfProducts(cart.getProducts()))
-                    .transactionApproved(false)
-                    .productIdList(cart.getProducts().stream().map(CartItem::getProductId).toList())
-                    .build();
-            return orderRepository.save(order);
+            if(cart.getCartId().equals(request.getCartId()) && cart.getUserId().equals(orderUtil.getAuthenticatedUser().getUserId())) {
+                Order order = Order.builder()
+                        .userId(request.getUserId())
+                        .totalPrice(cart.getTotalPrice())
+                        .totalAmountOfProduct(calculateTotalAmountOfProducts(cart.getProducts()))
+                        .transactionApproved(false)
+                        .productIdList(cart.getProducts().stream().map(CartItem::getProductId).toList())
+                        .build();
+                return orderRepository.save(order);
+            }else {
+                throw new UsernameNotFoundException("You don't have an acess");
+            }
+        }catch (UsernameNotFoundException e){
+            throw new RuntimeException("You don't have an acess");
         }catch (Exception e){
             throw new RuntimeException("Cart items not found");
         }
     }
-
 
     private Boolean checkAmountOfProduct(PlaceOrderRequest request) {
         boolean isEnough = false;
@@ -72,7 +78,13 @@ public class OrderService {
         List<CartItem> cartItems = new ArrayList<>();
         try {
             cart = getCartByUserId(request);
-            cartItems = cart.getProducts();
+            if(cart.getCartId().equals(request.getCartId()) && cart.getUserId().equals(orderUtil.getAuthenticatedUser().getUserId())) {
+                cartItems = cart.getProducts();
+            }else{
+                throw new UsernameNotFoundException("You don't have an acess");
+            }
+        }catch (UsernameNotFoundException e){
+            throw new RuntimeException("You don't have an acess");
         }catch (Exception e){
             throw new RuntimeException("Cart items not found");
         }
