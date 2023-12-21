@@ -22,7 +22,7 @@ public class ProductConfig {
                 .addFilterBefore(customHeaderAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(x ->
                         x
-                                .requestMatchers("/product/getProductById","/product/productImage/**").authenticated()
+                                .requestMatchers("/product/getProductById","/product/productImage/**","/product/updateProductQuantity/**").authenticated()
                                 .anyRequest().hasAuthority("ROLE_ADMIN"))
                 .build();
 

@@ -35,7 +35,10 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                 }
                 try {
                     jwtUtil.validateToken(authHeader);
-                    request = exchange.getRequest().mutate().header("loggedInUser", jwtUtil.extractUserNameFromToken(authHeader)).build();
+                    request = exchange.getRequest()
+                            .mutate()
+                            .header("loggedInUser", jwtUtil.extractUserNameFromToken(authHeader))
+                            .build();
                 } catch (Exception e) {
                     throw new RuntimeException("Authorization token is not valid");
                 }

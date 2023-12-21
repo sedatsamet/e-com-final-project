@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .authorities(request.getAuthorities())
                 .cartId(UUID.randomUUID())
-                .orderIdList(List.of())
+                .orderIdList(new ArrayList<>())
                 .accountNonExpired(true)
                 .isEnabled(true)
                 .accountNonLocked(true)
@@ -86,7 +87,8 @@ public class UserService {
             user.setUsername(request.getUsername());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setAuthorities(request.getAuthorities());
-            userRepository.save(user);
+            user.setOrderIdList(request.getOrderIdList());
+            userRepository.saveAndFlush(user);
         }
         return user;
     }

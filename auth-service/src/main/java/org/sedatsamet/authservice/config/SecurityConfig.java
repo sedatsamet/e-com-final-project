@@ -14,10 +14,13 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(x ->
-                x
-                        .requestMatchers("/auth/login", "auth/validate").permitAll()
-                        .anyRequest().authenticated()).build();
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(x ->
+                        x
+                                .requestMatchers("/auth/login", "auth/validate").permitAll()
+                                .anyRequest().authenticated())
+                .build();
     }
 
     @Bean

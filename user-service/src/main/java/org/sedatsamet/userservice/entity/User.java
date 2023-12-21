@@ -28,14 +28,13 @@ public class User implements UserDetails {
     private String password;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "userId"))
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<Role> authorities;
 
     @ElementCollection(targetClass = UUID.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_orderIdList", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "orderId", nullable = false)
+    @CollectionTable(name = "user_orderIdList", joinColumns = @JoinColumn(name = "userId"))
     private List<UUID> orderIdList;
 
     @GeneratedValue(strategy = GenerationType.UUID)

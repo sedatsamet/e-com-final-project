@@ -59,4 +59,14 @@ public class ProductService {
         productRepository.delete(product);
         return "Product deleted successfully";
     }
+
+    public ResponseEntity<?> updateProductQuantiy(String productId, Integer quantity) {
+        Optional<Product> product = productRepository.findById(UUID.fromString(productId));
+        if(product.isPresent()){
+            Product updatedProduct = product.get();
+            updatedProduct.setQuantity(updatedProduct.getQuantity() - quantity);
+            return ResponseEntity.ok(productRepository.save(updatedProduct));
+        }
+        return ResponseEntity.status(401).build();
+    }
 }

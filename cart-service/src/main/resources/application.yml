@@ -6,7 +6,7 @@ spring:
     name: cart-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/e-commerce-cartDb
+    url: jdbc:mysql://localhost:3306/e_commerce_cartDb
     username: root
     password: Sedat1998
   jpa:

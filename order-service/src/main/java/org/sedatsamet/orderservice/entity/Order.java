@@ -17,7 +17,6 @@ import java.util.UUID;
 @Builder
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID orderId;
     private UUID userId;
     private Double totalPrice;

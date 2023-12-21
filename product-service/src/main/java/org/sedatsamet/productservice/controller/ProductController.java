@@ -57,4 +57,13 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@RequestParam String productId) {
         return ResponseEntity.ok(productService.deleteProduct(UUID.fromString(productId)));
     }
+
+    @PutMapping("/updateProductQuantity")
+    public ResponseEntity<?> updateProductQuantity(@RequestParam String productId, @RequestParam String quantity) {
+        try {
+            return productService.updateProductQuantiy(productId, Integer.parseInt(quantity));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
+    }
 }
