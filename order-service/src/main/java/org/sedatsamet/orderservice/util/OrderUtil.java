@@ -28,7 +28,6 @@ public class OrderUtil {
     private String userServiceUpdateUser = "http://user-service/user/updateUser";
     private String productServiceUrl = "http://product-service/product/getProductById?productId=";
     private String cartServiceUrl = "http://cart-service/cart/getCartByUserIdForOrderService?userId=";
-    // TODO: complete the url
     private String updateProductQuantityUrl = "http://product-service/product/updateProductQuantity";
     private String username;
 

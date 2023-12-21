@@ -42,7 +42,6 @@ public class UserService {
                 .credentialsNonExpired(true)
                 .build();
         userRepository.save(newUser);
-
         return newUser;
     }
 

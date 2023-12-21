@@ -1,5 +1,6 @@
 package org.sedatsamet.orderservice.service;
 
+import jakarta.ws.rs.NotFoundException;
 import org.sedatsamet.orderservice.dto.PlaceOrderRequest;
 import org.sedatsamet.orderservice.entity.Cart;
 import org.sedatsamet.orderservice.entity.CartItem;
@@ -38,6 +39,50 @@ public class OrderService {
         }
     }
 
+    public Order approveOrder(String orderId) {
+        if(orderUtil.isUserAdmin()){
+            Order approvedOrder = orderRepository.findById(UUID.fromString(orderId)).orElse(null);
+            if(approvedOrder != null && approvedOrder.getTransactionApproved() == false){
+                try {
+                    approvedOrder.setTransactionApproved(true);
+                    Cart cart = getCartByUserId(approvedOrder.getUserId());
+                    for(CartItem cartItem : cart.getProducts()){
+                        orderUtil.setUpdateProductQuantity(cartItem.getProductId(), -cartItem.getQuantity());
+                    }
+                }catch (Exception e){
+                    throw new RuntimeException("Product not found while increasing quantities of product with orderId: " + approvedOrder.getOrderId());
+                }
+                return orderRepository.save(approvedOrder);
+            }else{
+                throw new NotFoundException("Order not found while approving");
+            }
+        }else{
+            throw new RuntimeException("You don't have an acess");
+        }
+    }
+
+    public Order denyOrder(String orderId){
+        if(orderUtil.isUserAdmin()){
+            Order approvedOrder = orderRepository.findById(UUID.fromString(orderId)).orElse(null);
+            if(approvedOrder != null){
+                approvedOrder.setTransactionApproved(false);
+                try {
+                    Cart cart = getCartByUserId(approvedOrder.getUserId());
+                    for(CartItem cartItem : cart.getProducts()){
+                        orderUtil.setUpdateProductQuantity(cartItem.getProductId(), +cartItem.getQuantity());
+                    }
+                }catch (Exception e){
+                    throw new RuntimeException("Product not found while increasing quantities of product with orderId: " + approvedOrder.getOrderId());
+                }
+                return orderRepository.save(approvedOrder);
+            }else{
+                throw new NotFoundException("Order not found while denying");
+            }
+        }else{
+            throw new RuntimeException("You don't have an acess");
+        }
+    }
+
     public List<Order> getAllOrders() {
         if(orderUtil.isUserAdmin()){
             try {
@@ -70,10 +115,9 @@ public class OrderService {
         }
     }
 
-    private Order createNewOrderFinal(Order order, UUID userId, Cart cart) {
+    private Order createNewOrderFinal(Order order, UUID userId) {
         User updatedUser = updateUserOrderIdList(userId, order.getOrderId());
         orderUtil.updateUserOrderIdList(updatedUser);
-        updateCartItemQuantity(cart);
         return orderRepository.save(order);
     }
 
@@ -81,7 +125,7 @@ public class OrderService {
         Order order;
         Cart cart;
         try {
-            cart = getCartByUserId(request);
+            cart = getCartByUserId(request.getUserId());
             if(cart.getCartId().equals(request.getCartId()) && cart.getUserId().equals(orderUtil.getAuthenticatedUser().getUserId())) {
                 order = Order.builder()
                         .orderId(UUID.randomUUID())
@@ -99,7 +143,7 @@ public class OrderService {
         }catch (Exception e){
             throw new RuntimeException("Cart items not found");
         }
-        return createNewOrderFinal(order, request.getUserId(), cart);
+        return createNewOrderFinal(order, request.getUserId());
     }
 
     private Boolean checkAmountOfProduct(PlaceOrderRequest request) {
@@ -121,7 +165,7 @@ public class OrderService {
         Cart cart;
         List<CartItem> cartItems = new ArrayList<>();
         try {
-            cart = getCartByUserId(request);
+            cart = getCartByUserId(request.getUserId());
             if(cart.getCartId().equals(request.getCartId()) && cart.getUserId().equals(orderUtil.getAuthenticatedUser().getUserId())) {
                 cartItems = cart.getProducts();
             }else{
@@ -135,8 +179,8 @@ public class OrderService {
         return cartItems;
     }
 
-    private Cart getCartByUserId(PlaceOrderRequest request) {
-        return orderUtil.getCartByUserId(request.getUserId());
+    private Cart getCartByUserId(UUID userId) {
+        return orderUtil.getCartByUserId(userId);
     }
 
     private Double calculateTotalAmountOfProducts(List<CartItem> cartItems) {
@@ -157,16 +201,5 @@ public class OrderService {
 
     private CartItem getCartItemFromProductService(CartItem cartItem) {
         return orderUtil.getCartItemFromProductService(cartItem.getProductId());
-    }
-
-    private void updateCartItemQuantity(Cart cart) {
-        List<CartItem> cartItems = cart.getProducts();
-        try {
-            for(CartItem cartItem : cartItems){
-                orderUtil.setUpdateProductQuantity(cartItem.getProductId(), cartItem.getQuantity());
-            }
-        }catch (Exception e){
-            throw new RuntimeException("Product not found while updating quantities of product with cartId: " + cart.getCartId());
-        }
     }
 }

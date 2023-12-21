@@ -64,7 +64,7 @@ public class ProductService {
         Optional<Product> product = productRepository.findById(UUID.fromString(productId));
         if(product.isPresent()){
             Product updatedProduct = product.get();
-            updatedProduct.setQuantity(updatedProduct.getQuantity() - quantity);
+            updatedProduct.setQuantity(updatedProduct.getQuantity() + quantity);
             return ResponseEntity.ok(productRepository.save(updatedProduct));
         }
         return ResponseEntity.status(401).build();

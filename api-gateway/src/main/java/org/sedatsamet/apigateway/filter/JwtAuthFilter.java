@@ -1,6 +1,5 @@
 package org.sedatsamet.apigateway.filter;
 
-import lombok.extern.slf4j.Slf4j;
 import org.sedatsamet.apigateway.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -9,7 +8,6 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Config> {
     @Autowired
     private RouteValidator routeValidator;
