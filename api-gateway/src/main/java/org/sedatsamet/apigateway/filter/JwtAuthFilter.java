@@ -5,6 +5,7 @@ import org.sedatsamet.apigateway.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,8 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                 // header contains header or not
                 if (!exchange.getRequest().getHeaders().containsKey("Authorization")) {
                     log.error("Authorization header is missing");
-                    throw new RuntimeException("Authorization header is missing");
+                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                    return exchange.getResponse().setComplete();
                 }
                 String authHeader = exchange.getRequest().getHeaders().get("Authorization").get(0);
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
