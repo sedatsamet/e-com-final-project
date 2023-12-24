@@ -113,10 +113,8 @@ public class OrderUtil {
         try {
             // Retrieve the authentication details for the current context
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
             // Extract the principal user from the authentication details
             User authenticatedUser = (User) authentication.getPrincipal();
-
             // Check if the user's authorities contain the "ROLE_ADMIN" authority
             if (authenticatedUser.getAuthorities().stream().findFirst().get().getAuthority().equals("ROLE_ADMIN")) {
                 return true;
@@ -156,7 +154,6 @@ public class OrderUtil {
      */
     public CartItem getCartItemFromProductService(UUID productId) {
         CartItem cartItem;
-
         try {
             // Attempt to retrieve the cart item using the provided product ID
             cartItem = restTemplate.exchange(productServiceUrl + productId.toString(), HttpMethod.GET, httpEntity, CartItem.class).getBody();

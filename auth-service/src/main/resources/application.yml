@@ -3,7 +3,6 @@ server:
   servlet:
     context-path: /
 
-
 openapi:
   service:
     title: auth-service doc #title that you will want to display in the swagger ui

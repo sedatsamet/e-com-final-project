@@ -13,7 +13,6 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class DocumentationConfig {
-
     private final RouteDefinitionLocator locator;
 
     @Bean
@@ -27,5 +26,4 @@ public class DocumentationConfig {
         });
         return groups;
     }
-
 }

@@ -23,7 +23,6 @@ import java.util.List;
         scheme = "bearer"
 )
 public class SpringFoxConfig {
-
     @Bean
     public OpenAPI customOpenAPI(
             @Value("${openapi.service.title}") String serviceTitle,

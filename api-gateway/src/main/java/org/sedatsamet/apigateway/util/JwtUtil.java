@@ -16,6 +16,7 @@ import java.security.Key;
 public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
+
     /**
      * Validates the given JWT token using the configured signing key.
      * This method parses the token claims to ensure its validity.
@@ -56,6 +57,7 @@ public class JwtUtil {
             throw new RuntimeException("Failed to extract username from token", e);
         }
     }
+
     /**
      * Parses the provided JWT token to extract its claims.
      * This method verifies the signature of the token and then retrieves the body (claims) from it.

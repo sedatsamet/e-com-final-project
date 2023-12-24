@@ -96,7 +96,6 @@ public class ProductController {
         try {
             // Retrieve the image data for the specified product
             byte[] imageData = productService.getProduct(UUID.fromString(productId)).getProductImage();
-
             // Return the image data with appropriate content type
             return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.valueOf("image/png"))

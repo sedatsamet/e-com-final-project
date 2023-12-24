@@ -25,7 +25,6 @@ public class CustomHeaderAuthenticationFilter extends OncePerRequestFilter {
     private CartUtil cartUtil;
     private static final String LOGGED_IN_USER_HEADER = "loggedInUser";
 
-
     /**
      * Filters the incoming HTTP request to set the authentication context based on the logged-in user.
      *
@@ -37,11 +36,9 @@ public class CustomHeaderAuthenticationFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         // Extract the username of the logged-in user from the request header
         String loggedInUsername = request.getHeader(LOGGED_IN_USER_HEADER);
         User loggedInUser;
-
         try {
             // Attempt to fetch the details of the logged-in user
             loggedInUser = getLoggedInUser(loggedInUsername);
@@ -51,13 +48,11 @@ public class CustomHeaderAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         // If a valid username is present, create an authentication token and set it in the security context
         if (StringUtils.hasText(loggedInUsername)) {
             Authentication authentication = new UsernamePasswordAuthenticationToken(loggedInUser, null, loggedInUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
         // Continue with the filter chain processing
         filterChain.doFilter(request, response);
     }

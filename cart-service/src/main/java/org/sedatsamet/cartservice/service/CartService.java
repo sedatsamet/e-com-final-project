@@ -121,14 +121,11 @@ public class CartService {
         User user = null;                       // Initialize user object
         Cart cart = null;                       // Initialize cart object
         List<CartItem> emptyList = new ArrayList<>(); // Create an empty list for cart items
-
         try {
             // Retrieve user details based on the provided user ID
             user = getUserFromUserService(userId);
-
             // Retrieve cart details based on the user's cart ID
             cart = cartRepository.findById(user.getCartId()).orElse(null);
-
             // Throw a runtime exception if cart or user is not found
             if (cart == null) {
                 throw new RuntimeException("Cart not found while deleting all items");
@@ -143,10 +140,8 @@ public class CartService {
             log.error("Error deleting all cart items: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting cart items");
         }
-
         // Delete the cart from the repository
         cartRepository.delete(cart);
-
         // Construct and return the response DTO
         return ResponseEntity.ok(CartResponseDto.builder()
                 .cartId(user.getCartId())
@@ -166,10 +161,8 @@ public class CartService {
     public ResponseEntity<?> getCart(UUID userId) {
         User user = null;
         List<CartItem> productListOfUser = new ArrayList<>();
-
         try {
             user = getUserFromUserService(userId);
-
             if (user != null) {
                 Optional<Cart> cart = cartRepository.findById(user.getCartId());
                 if (cart.isPresent()) {
@@ -180,7 +173,6 @@ public class CartService {
             log.error("Error retrieving cart details for user {}: {}", userId, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving cart details");
         }
-
         // Construct and return the response DTO
         return ResponseEntity.ok(CartResponseDto.builder()
                 .cartId(user != null ? user.getCartId() : null)
@@ -202,15 +194,12 @@ public class CartService {
         List<CartItem> cartItems = new ArrayList<>();
         Cart cart = null;
         CartItem cartItemWillUpdate = null;
-
         try {
             user = getUserFromUserService(request.getUserId());
             cart = cartRepository.findById(user.getCartId()).orElse(null);
-
             if (cart == null) {
                 throw new RuntimeException("Cart not found");
             }
-
             cartItems = cart.getProducts();
             for (CartItem cartItem : cartItems) {
                 if (cartItem.getProductId().equals(request.getProductId())) {
@@ -218,20 +207,16 @@ public class CartService {
                     break;
                 }
             }
-
             if (cartItemWillUpdate == null) {
                 throw new RuntimeException("Product not found");
             }
-
             cartItemWillUpdate.setQuantity(request.getAmount());
             cart.setTotalPrice(calculateTotalPrice(cartItems));
             cartRepository.save(cart);
-
         } catch (Exception e) {
             log.error("Error updating cart item: {}", e.getMessage(), e);
             throw new RuntimeException("Error updating cart item");
         }
-
         // Construct and return the response DTO
         return CartResponseDto.builder()
                 .cartId(user.getCartId())
@@ -279,14 +264,11 @@ public class CartService {
         Cart cart = null;
         CartItem cartItemWillAdd;
         List<CartItem> cartItems = new ArrayList<>();
-
         try {
             // Fetch the user details from the user service
             user = getUserFromUserService(request.getUserId());
-
             // Retrieve the user's cart from the repository
             cart = cartRepository.findById(user.getCartId()).orElse(null);
-
             // If the cart doesn't exist, create a new one
             if (cart == null) {
                 cart = Cart.builder()
@@ -296,11 +278,9 @@ public class CartService {
                         .totalPrice(0.0)
                         .build();
             }
-
             // Get the current list of products in the cart
             cartItems = cart.getProducts();
             CartItem existingProduct = null;
-
             // Check if the product already exists in the cart
             for (CartItem cartItem : cartItems) {
                 if (cartItem.getProductId().equals(request.getProductId())) {
@@ -308,7 +288,6 @@ public class CartService {
                     break;
                 }
             }
-
             // Update the quantity if the product exists; otherwise, add a new cart item
             if (existingProduct != null) {
                 cartItemWillAdd = existingProduct;
@@ -318,25 +297,20 @@ public class CartService {
                 cartItemWillAdd.setQuantity(request.getAmount());
                 cartItems.add(cartItemWillAdd);
             }
-
             // Set the cart for each cart item
             for (CartItem item : cartItems) {
                 item.setCart(cart);
             }
-
             // Update the cart's product list and total price
             cart.setProducts(cartItems);
             cart.setTotalPrice(calculateTotalPrice(cart.getProducts()));
-
             // Save the updated cart to the repository
             cartRepository.save(cart);
-
         } catch (Exception e) {
             // Log the error and throw a runtime exception with a generic error message
             log.error("Error adding product to cart: {}", e.getMessage(), e);
             throw new RuntimeException("Error adding product to cart");
         }
-
         // Return the updated cart details in the form of a CartResponseDto
         return CartResponseDto.builder()
                 .cartId(user.getCartId())
@@ -413,7 +387,6 @@ public class CartService {
         Optional<Cart> cart = null;
         List<CartItem> productListOfUser = null;
         User user = null;
-
         try {
             user = getUserFromUserService(userId);
             if (user != null) {
@@ -433,7 +406,6 @@ public class CartService {
             log.error("Error retrieving cart details for order service: {}", e.getMessage(), e);
             throw new RuntimeException("Error retrieving cart details for order service");
         }
-
         return Cart.builder()
                 .cartId(user.getCartId())
                 .userId(user.getUserId())

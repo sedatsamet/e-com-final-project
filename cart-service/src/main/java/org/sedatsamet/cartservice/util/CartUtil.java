@@ -41,7 +41,6 @@ public class CartUtil {
         this.username = username;
         setHeaders(this.username);
         User loggedInUser = null;
-
         try {
             loggedInUser = restTemplate.exchange(userServiceUrlByUsername + this.username, HttpMethod.GET, httpEntity, User.class).getBody();
         } catch (Exception e) {
@@ -55,7 +54,6 @@ public class CartUtil {
                 throw new RuntimeException("Error retrieving details for logged-in user");
             }
         }
-
         return loggedInUser;
     }
 
@@ -68,7 +66,6 @@ public class CartUtil {
      */
     public User getUserDetailsByUserId(UUID userId) {
         User loggedInUser = null;
-
         try {
             loggedInUser = restTemplate.exchange(userServiceUrlById + userId.toString(), HttpMethod.GET, httpEntity, User.class).getBody();
         } catch (Exception e) {
@@ -76,7 +73,6 @@ public class CartUtil {
             log.error("Error retrieving details for user with ID {}: {}", userId, e.getMessage(), e);
             throw new RuntimeException("User not found");
         }
-
         return loggedInUser;
     }
 
@@ -89,7 +85,6 @@ public class CartUtil {
      */
     public CartItem getCartItemFromProductService(CartItemRequest request) {
         CartItem cartItem = null;
-
         try {
             cartItem = restTemplate.exchange(productServiceUrl + request.getProductId().toString(), HttpMethod.GET, httpEntity, CartItem.class).getBody();
         } catch (Exception e) {
@@ -97,7 +92,6 @@ public class CartUtil {
             log.error("Error retrieving cart item for product with ID {}: {}", request.getProductId(), e.getMessage(), e);
             throw new RuntimeException("Product not found");
         }
-
         return cartItem;
     }
 

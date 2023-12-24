@@ -65,10 +65,8 @@ public class UserService {
                     .accountNonLocked(true)
                     .credentialsNonExpired(true)
                     .build();
-
             // Save the new user to the userRepository
             userRepository.save(newUser);
-
             return newUser;
         } catch (Exception e) {
             // Log the error and throw a runtime exception
@@ -89,7 +87,6 @@ public class UserService {
             // Retrieve the currently authenticated user
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User authenticatedUser = (User) authentication.getPrincipal();
-
             // Check if the authenticated user has ADMIN role or if they're updating their own profile
             if (authenticatedUser.getAuthorities().stream().findFirst().get().getAuthority().equals("ROLE_ADMIN") ||
                     authenticatedUser.getUserId().equals(request.getUserId())) {
@@ -117,7 +114,6 @@ public class UserService {
             // Retrieve the currently authenticated user
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User authenticatedUser = (User) authentication.getPrincipal();
-
             // Check if the authenticated user has ADMIN role or if they're trying to view their own profile
             if (authenticatedUser.getAuthorities().stream().findFirst().get().getAuthority().equals("ROLE_ADMIN") ||
                     authenticatedUser.getUserId().equals(userId)) {
@@ -162,7 +158,6 @@ public class UserService {
         try {
             // Retrieve the user by ID from the repository
             User user = userRepository.findById(request.getUserId()).orElse(null);
-
             if(user != null) {
                 // Update the user details
                 user.setName(request.getName());
@@ -172,11 +167,9 @@ public class UserService {
                 user.setPassword(passwordEncoder.encode(request.getPassword()));
                 user.setAuthorities(request.getAuthorities());
                 user.setOrderIdList(request.getOrderIdList());
-
                 // Save the updated user details
                 userRepository.saveAndFlush(user);
             }
-
             return user;
         } catch (Exception e) {
             // Log the error and throw a runtime exception

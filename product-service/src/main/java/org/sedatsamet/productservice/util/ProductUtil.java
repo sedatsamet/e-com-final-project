@@ -30,9 +30,7 @@ public class ProductUtil {
         // Set the username and headers for the HTTP request
         this.username = username;
         setHeaders(this.username);
-
         User loggedInUser;
-
         // Attempt to retrieve the user details from the user service
         try {
             loggedInUser = restTemplate.exchange(userServiceUrlByUsername + this.username, HttpMethod.GET, httpEntity, User.class).getBody();
@@ -41,7 +39,6 @@ public class ProductUtil {
             log.error("Error retrieving user details for username {}: {}", this.username, e.getMessage(), e);
             throw new RuntimeException("User not found");
         }
-
         // Return the retrieved user details
         return loggedInUser;
     }
