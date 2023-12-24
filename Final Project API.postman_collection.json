@@ -1,0 +1,698 @@
+{
+	"info": {
+		"_postman_id": "5a739c12-2906-4d80-8a69-d9d4345edfde",
+		"name": "Final Project API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "23524657"
+	},
+	"item": [
+		{
+			"name": "USER-SERVICE",
+			"item": [
+				{
+					"name": "CREATE NEW USER",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzMjUwNjkwLCJleHAiOjE3MDMyNTI0OTB9.vXmUYQkq1hnKzrZm-Ezkg8j2cR9fsCPS6htFiIS50Ak"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Sedat Samet\",\n    \"surName\":\"Oypan\",\n    \"telephone\":\"1111111111111\",\n    \"username\":\"sedatsamet\",\n    \"password\":\"pass\",\n    \"authorities\":[\"ROLE_CUSTOMER\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/user/register"
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL USERS",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzNDM1NzI3LCJleHAiOjE3MDM0Mzc1Mjd9.UtzSBEb9Ui4MUrkcJhMrLDYHaMcD5IGe0vz-Aobob5I"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9000/user/allUsers"
+					},
+					"response": []
+				},
+				{
+					"name": "GET USER BY ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzMTg3NDIyLCJleHAiOjE3MDMxODkyMjJ9.P2-729aYB72Gg62Dl8ewZAx1hWaSa3I_YdhpUN3AewE"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/user/getUser?userId=f4fc863a-668c-47d4-9ef8-e67238fdb425",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"user",
+								"getUser"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "f4fc863a-668c-47d4-9ef8-e67238fdb425"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET USER BY USERNAME",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzMjUwNjkwLCJleHAiOjE3MDMyNTI0OTB9.vXmUYQkq1hnKzrZm-Ezkg8j2cR9fsCPS6htFiIS50Ak"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/user/getUserByUsername?username=sibeloypan",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"user",
+								"getUserByUsername"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "sibeloypan"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE USER",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWRhdHNhbWV0IiwiaWF0IjoxNzAzMTg3NTU3LCJleHAiOjE3MDMxODkzNTd9.4LLlYKiEkOhP4LmDX4iPCrTAmcSeFKqsACl1xw6wkLU"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\":\"f4fc863a-668c-47d4-9ef8-e67238fdb425\",\n    \"name\":\"Sedat Samet\",\n    \"surName\":\"Oypan\",\n    \"telephone\":\"11111111111\",\n    \"username\":\"sedatsamet2\",\n    \"password\":\"pass\",\n    \"authorities\":[\"ROLE_CUSTOMER\"],\n    \"orderIdList\":[\"\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/user/updateUser"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AUTH SERVICE",
+			"item": [
+				{
+					"name": "LOGIN ( GENERATE TOKEN)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"sibeloypan\",\n    \"password\":\"pass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "VALIDATE TOKEN",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/auth/validate?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzNDM1NzI3LCJleHAiOjE3MDM0Mzc1Mjd9.UtzSBEb9Ui4MUrkcJhMrLDYHaMcD5IGe0vz-Aobob5I",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"auth",
+								"validate"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzNDM1NzI3LCJleHAiOjE3MDM0Mzc1Mjd9.UtzSBEb9Ui4MUrkcJhMrLDYHaMcD5IGe0vz-Aobob5I"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PRODUCT SERVICE",
+			"item": [
+				{
+					"name": "CREATE NEW PRODUCT",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzMTg3OTA3LCJleHAiOjE3MDMxODk3MDd9.9S0_PZB-dKB-gfL_ANM8NAWrvHDV_Wj1MEYk88gr4kE"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/sedatsametoypan/Documents/Images/Bart.png"
+								},
+								{
+									"key": "name",
+									"value": "First Product",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "First Product Description",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": "http://localhost:9000/product/create"
+					},
+					"response": []
+				},
+				{
+					"name": "GET PRODUCT BY ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzNDM1NzI3LCJleHAiOjE3MDM0Mzc1Mjd9.UtzSBEb9Ui4MUrkcJhMrLDYHaMcD5IGe0vz-Aobob5I"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/product/getProductById?productId=00f97aca-82a9-499d-9d80-ce3afc41e8a0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"product",
+								"getProductById"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "00f97aca-82a9-499d-9d80-ce3afc41e8a0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PRODUCT UPDATE",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzMTg4MDcxLCJleHAiOjE3MDMxODk4NzF9.5Rms5zugviGfTYL95HYgxSIBvW0vpBEwtxM1zK63Tw4"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "productId",
+									"value": "6e3a91dc-b411-424f-974f-7d3e965d6af0",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "First Product Updated 3",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "First Product Description Updated 3",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "8",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "50.99",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/sedatsametoypan/Documents/Images/cartman.jpeg"
+								}
+							]
+						},
+						"url": "http://localhost:9000/product/update"
+					},
+					"response": []
+				},
+				{
+					"name": "GET IMAGE BY PRODUCTID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWRhdHNhbWV0MiIsImlhdCI6MTcwMzE4ODE0OCwiZXhwIjoxNzAzMTg5OTQ4fQ.UFRee2M8neCjJDbxHKk9dXv9nBOmn6wuXTPvyosgPHo"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9000/product/productImage/6e3a91dc-b411-424f-974f-7d3e965d6af0"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE PRODUCT BY ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzMTg4MTk1LCJleHAiOjE3MDMxODk5OTV9.aq6GpcfbfPdvCrEPKsG88-XJa31WFJZPF81Law6vhAc"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/product/deleteProduct?productId=6e3a91dc-b411-424f-974f-7d3e965d6af0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"product",
+								"deleteProduct"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "6e3a91dc-b411-424f-974f-7d3e965d6af0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE PRODUCT QUANTITY",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWRhdHNhbWV0MiIsImlhdCI6MTcwMzE4ODM1MSwiZXhwIjoxNzAzMTkwMTUxfQ.oPKX0RqQuTQGox3P53LKXzzhm9XAhvd2wTOcCVEFLCM"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/product/updateProductQuantity?productId=8899bfc6-717c-4450-b4a0-11505ea0f97f&quantity=-5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"product",
+								"updateProductQuantity"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "8899bfc6-717c-4450-b4a0-11505ea0f97f"
+								},
+								{
+									"key": "quantity",
+									"value": "-5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CART SERVICE",
+			"item": [
+				{
+					"name": "ADD TO CART",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWRhdHNhbWV0MiIsImlhdCI6MTcwMzE4ODM1MSwiZXhwIjoxNzAzMTkwMTUxfQ.oPKX0RqQuTQGox3P53LKXzzhm9XAhvd2wTOcCVEFLCM"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\":\"00f97aca-82a9-499d-9d80-ce3afc41e8a0\",\n    \"userId\":\"f4fc863a-668c-47d4-9ef8-e67238fdb425\",\n    \"amount\":\"20\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/cart/add"
+					},
+					"response": []
+				},
+				{
+					"name": "GET CART BY USER ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWRhdHNhbWV0MiIsImlhdCI6MTcwMzE4ODM1MSwiZXhwIjoxNzAzMTkwMTUxfQ.oPKX0RqQuTQGox3P53LKXzzhm9XAhvd2wTOcCVEFLCM"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/cart/getCartByUserId?userId=f4fc863a-668c-47d4-9ef8-e67238fdb425",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"cart",
+								"getCartByUserId"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "f4fc863a-668c-47d4-9ef8-e67238fdb425"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET CART BY USER ID FOR ORDER",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWRhdHNhbWV0MiIsImlhdCI6MTcwMzE4ODM1MSwiZXhwIjoxNzAzMTkwMTUxfQ.oPKX0RqQuTQGox3P53LKXzzhm9XAhvd2wTOcCVEFLCM"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/cart/getCartByUserIdForOrderService?userId=f4fc863a-668c-47d4-9ef8-e67238fdb425",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"cart",
+								"getCartByUserIdForOrderService"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "f4fc863a-668c-47d4-9ef8-e67238fdb425"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE AMOUNT OF ITEM",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWRhdHNhbWV0MiIsImlhdCI6MTcwMzE4ODM1MSwiZXhwIjoxNzAzMTkwMTUxfQ.oPKX0RqQuTQGox3P53LKXzzhm9XAhvd2wTOcCVEFLCM"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\":\"00f97aca-82a9-499d-9d80-ce3afc41e8a0\",\n    \"userId\":\"f4fc863a-668c-47d4-9ef8-e67238fdb425\",\n    \"amount\":\"10\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/cart/updateCartItem"
+					},
+					"response": []
+				},
+				{
+					"name": "CLEAR CART BY USER ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWRhdHNhbWV0MiIsImlhdCI6MTcwMzE4ODM1MSwiZXhwIjoxNzAzMTkwMTUxfQ.oPKX0RqQuTQGox3P53LKXzzhm9XAhvd2wTOcCVEFLCM"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/cart/clearCart?userId=f4fc863a-668c-47d4-9ef8-e67238fdb425",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"cart",
+								"clearCart"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "f4fc863a-668c-47d4-9ef8-e67238fdb425"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ORDER SERVICE",
+			"item": [
+				{
+					"name": "PLACE ORDER",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWRhdHNhbWV0MiIsImlhdCI6MTcwMzE4ODM1MSwiZXhwIjoxNzAzMTkwMTUxfQ.oPKX0RqQuTQGox3P53LKXzzhm9XAhvd2wTOcCVEFLCM"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\":\"f4fc863a-668c-47d4-9ef8-e67238fdb425\",\n    \"cartId\":\"e45e05aa-5338-430e-888b-1f754097b30d\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/order/placeOrder"
+					},
+					"response": []
+				},
+				{
+					"name": "GET ORDERS BY USER ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWRhdHNhbWV0MiIsImlhdCI6MTcwMzE4ODM1MSwiZXhwIjoxNzAzMTkwMTUxfQ.oPKX0RqQuTQGox3P53LKXzzhm9XAhvd2wTOcCVEFLCM"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/order/getOrdersByUserId?userId=f4fc863a-668c-47d4-9ef8-e67238fdb425",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"order",
+								"getOrdersByUserId"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "f4fc863a-668c-47d4-9ef8-e67238fdb425"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL ORDERS",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzMTg5NDEwLCJleHAiOjE3MDMxOTEyMTB9.rPZizlq-5biEX2zC5neI6cpDZXYTygWtiVSWQPbQ6TE"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9000/order/getAllOrders"
+					},
+					"response": []
+				},
+				{
+					"name": "APPROVE ORDER",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzMTg5NDQ1LCJleHAiOjE3MDMxOTEyNDV9.8S0-SezMaS-GR-imHtyBKtntK-8OczrklWUemZ-5K3g"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/order/approveOrderByOrderId?orderId=c75294c5-c105-41db-bd16-6559d073488f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"order",
+								"approveOrderByOrderId"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "c75294c5-c105-41db-bd16-6559d073488f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DENY ORDER",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWJlbG95cGFuIiwiaWF0IjoxNzAzMTg5NTE5LCJleHAiOjE3MDMxOTEzMTl9.3nqUCVi547WcA2qH_UdDr9Khxr9nm8t1fI7sEl0Qezw"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/order/denyOrderByOrderId?orderId=c75294c5-c105-41db-bd16-6559d073488f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"order",
+								"denyOrderByOrderId"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "c75294c5-c105-41db-bd16-6559d073488f"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
