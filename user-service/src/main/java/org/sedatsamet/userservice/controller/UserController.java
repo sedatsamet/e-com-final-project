@@ -1,5 +1,6 @@
 package org.sedatsamet.userservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.sedatsamet.userservice.dto.request.UserCreateRequest;
 import org.sedatsamet.userservice.dto.request.UserUpdateRequest;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
     @Autowired
     private UserService userService;
