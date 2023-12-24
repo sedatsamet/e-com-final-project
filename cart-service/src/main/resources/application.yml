@@ -1,5 +1,13 @@
 server:
   port: 0
+  servlet:
+    context: /
+
+openapi:
+  service:
+    title: cart-service doc #title that you will want to display in the swagger ui
+    version: 1.0.0
+    url: http://localhost:9000 #api gateway url
 
 spring:
   application:

@@ -1,5 +1,6 @@
 package org.sedatsamet.cartservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.sedatsamet.cartservice.dto.CartItemRequest;
 import org.sedatsamet.cartservice.entity.Cart;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/cart")
 @Slf4j
+@SecurityRequirement(name = "bearerAuth")
 public class CartController {
     @Autowired
     private CartService cartService;
