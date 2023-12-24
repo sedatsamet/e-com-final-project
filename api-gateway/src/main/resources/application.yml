@@ -1,7 +1,34 @@
 server:
   port: 9000
+  servlet:
+    context-path: /
+
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    disable-swagger-default-url: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: API Gateway Service
+      - url: /cart-service/v3/api-docs
+        name: Cart Service
+      - url: /auth-service/v3/api-docs
+        name: Auth Service
+      - url: /product-service/v3/api-docs
+        name: Product Service
+      - url: /order-service/v3/api-docs
+        name: Order Service
+      - url: /user-service/v3/api-docs
+        name: User Service
 
 spring:
+  main:
+    web-application-type: reactive
   application:
     name: api-gateway
   cloud:
@@ -13,30 +40,36 @@ spring:
       routes[0]:
         id: user-service
         uri: lb://user-service
-        predicates[0]: Path=/user/**
+        predicates[0]: Path=/user/**, /user-service/**
         filters:
+          - RewritePath=/user-service/(?<path>.*), /$\{path}
           - JwtAuthFilter
       routes[1]:
         id: product-service
         uri: lb://product-service
-        predicates[0]: Path=/product/**
+        predicates[0]: Path=/product/**, /product-service/**
         filters:
+          - RewritePath=/product-service/(?<path>.*), /$\{path}
           - JwtAuthFilter
       routes[2]:
         id: auth-service
         uri: lb://auth-service
-        predicates[0]: Path=/auth/**
+        predicates[0]: Path=/auth/**, /auth-service/**
+        filters:
+          - RewritePath=/auth-service/(?<path>.*), /$\{path}
       routes[3]:
         id: cart-service
         uri: lb://cart-service
-        predicates[0]: Path=/cart/**
+        predicates[0]: Path=/cart/**, /cart-service/**
         filters:
+          - RewritePath=/cart-service/(?<path>.*), /$\{path}
           - JwtAuthFilter
       routes[4]:
         id: order-service
         uri: lb://order-service
-        predicates[0]: Path=/order/**
+        predicates[0]: Path=/order/**, /order-service/**
         filters:
+          - RewritePath=/order-service/(?<path>.*), /$\{path}
           - JwtAuthFilter
 
 eureka:

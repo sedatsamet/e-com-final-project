@@ -16,7 +16,8 @@ public class RouteValidator {
     public static final List<String> openApiEndpoints = List.of(
             "/user/register",
             "/auth/login",
-            "/eureka");
+            "/eureka",
+            "/v3/api-docs");
     /**
      * Predicate to determine if a given request is for an open (unsecured) endpoint.
      * Checks if the request URI path matches any of the endpoints listed in {@code openApiEndpoints}.
