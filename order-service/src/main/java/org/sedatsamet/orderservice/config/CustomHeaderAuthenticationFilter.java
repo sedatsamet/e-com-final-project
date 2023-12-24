@@ -37,19 +37,29 @@ public class CustomHeaderAuthenticationFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        // Extract the username of the logged-in user from the request header
+        String loggedInUsername = request.getHeader(LOGGED_IN_USER_HEADER);
+        User loggedInUser;
+
         try {
-            String loggedInUsername = request.getHeader(LOGGED_IN_USER_HEADER);
-            User loggedInUser = getLoggedInUser(loggedInUsername);
-            if (StringUtils.hasText(loggedInUsername)) {
-                Authentication authentication = new UsernamePasswordAuthenticationToken(loggedInUser, null, loggedInUser.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-            filterChain.doFilter(request, response);
+            // Attempt to fetch the details of the logged-in user
+            loggedInUser = getLoggedInUser(loggedInUsername);
         } catch (Exception e) {
-            // Log the error and re-throw it
-            log.error("Error in doFilterInternal: {}", e.getMessage(), e);
-            throw new ServletException("Error processing authentication filter", e);
+            // In case of any exceptions, log the error and continue with the filter chain
+            log.error("Error retrieving logged-in user {}: {}", loggedInUsername, e.getMessage(), e);
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        // If a valid username is present, create an authentication token and set it in the security context
+        if (StringUtils.hasText(loggedInUsername)) {
+            Authentication authentication = new UsernamePasswordAuthenticationToken(loggedInUser, null, loggedInUser.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+
+        // Continue with the filter chain processing
+        filterChain.doFilter(request, response);
     }
 
     /**

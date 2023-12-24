@@ -1,5 +1,6 @@
 package org.sedatsamet.orderservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.sedatsamet.orderservice.dto.PlaceOrderRequest;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/order")
 @Slf4j
+@SecurityRequirement(name = "bearerAuth")
 public class OrderController {
     @Autowired
     private OrderService orderService;
