@@ -1,5 +1,6 @@
 package org.sedatsamet.productservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.sedatsamet.productservice.dto.request.CreateProductRequest;
 import org.sedatsamet.productservice.dto.request.UpdateProductRequest;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/product")
 @Slf4j
+@SecurityRequirement(name = "bearerAuth")
 public class ProductController {
     @Autowired
     private ProductService productService;
